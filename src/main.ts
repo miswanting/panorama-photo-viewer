@@ -16,8 +16,8 @@ var isUserInteracting = false,
 init();
 animate();
 
-function init() {
-
+export function init() {
+    console.log(window.location.href.split('/')[3])
     var container, mesh;
 
     container = document.getElementById('container');
@@ -31,7 +31,7 @@ function init() {
     // invert the geometry on the x-axis so that all of the faces point inward
     geometry.scale(-1, 1, 1);
 
-    var texture = new THREE.TextureLoader().load('test.jpg');
+    var texture = new THREE.TextureLoader().load('微信图片_20190626094352.jpg');
     var material = new THREE.MeshBasicMaterial({
         map: texture
     });
@@ -154,7 +154,7 @@ function onDocumentMouseWheel(event) {
 
 }
 
-function animate() {
+export function animate() {
 
     requestAnimationFrame(animate);
     update();
