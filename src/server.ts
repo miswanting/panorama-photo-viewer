@@ -1,4 +1,5 @@
-const http = require('http');
+// const http = require('http');
+import * as http from 'http'
 // import { fstat } from 'fs';
 // import { createServer } from 'http';
 const host = '0.0.0.0';

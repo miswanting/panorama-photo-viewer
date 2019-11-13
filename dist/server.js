@@ -525,11 +525,11 @@ eval("module.exports = extend\n\nvar hasOwnProperty = Object.prototype.hasOwnPro
 /*!***********************!*\
   !*** ./src/server.ts ***!
   \***********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("\r\nvar http = __webpack_require__(/*! http */ \"./node_modules/stream-http/index.js\");\r\n// import { fstat } from 'fs';\r\n// import { createServer } from 'http';\r\nvar host = '0.0.0.0';\r\nvar port = 3000;\r\nvar server = http.createServer(function (req, res) {\r\n    console.log(req.url);\r\n    res.statusCode = 200;\r\n    res.setHeader('Content-Type', 'text/plain');\r\n    res.end('Hello, World!\\n');\r\n});\r\nserver.listen(port, host, function () {\r\n    console.log(\"Server running at http://\" + host + \":\" + port + \"/\");\r\n});\r\n\n\n//# sourceURL=webpack:///./src/server.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! http */ \"./node_modules/stream-http/index.js\");\n/* harmony import */ var http__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(http__WEBPACK_IMPORTED_MODULE_0__);\n// const http = require('http');\r\n\r\n// import { fstat } from 'fs';\r\n// import { createServer } from 'http';\r\nvar host = '0.0.0.0';\r\nvar port = 3000;\r\nvar server = http__WEBPACK_IMPORTED_MODULE_0__[\"createServer\"](function (req, res) {\r\n    console.log(req.url);\r\n    res.statusCode = 200;\r\n    res.setHeader('Content-Type', 'text/plain');\r\n    res.end('Hello, World!\\n');\r\n});\r\nserver.listen(port, host, function () {\r\n    console.log(\"Server running at http://\" + host + \":\" + port + \"/\");\r\n});\r\n\n\n//# sourceURL=webpack:///./src/server.ts?");
 
 /***/ }),
 
