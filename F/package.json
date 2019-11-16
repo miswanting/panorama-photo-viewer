@@ -1,0 +1,27 @@
+{
+  "name": "front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "copy-webpack-plugin": "latest",
+    "react": "latest",
+    "socket.io-client": "latest",
+    "react-dom": "latest",
+    "three": "latest",
+    "ts-loader": "latest",
+    "typescript": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest"
+  },
+  "devDependencies": {
+    "normalize.css": "^8.0.1"
+  },
+  "scripts": {
+    "初始化": "npm i",
+    "打包": "npx webpack",
+    "运行": "node dist/server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
