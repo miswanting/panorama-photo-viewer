@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "初始化": "npm i",
+    "打包": "npx webpack",
+    "运行": "node dist/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,11 +14,14 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "copy-webpack-plugin": "latest",
+    "css-loader": "latest",
+    "normalize.css": "latest",
     "react": "latest",
     "react-dom": "latest",
     "sass": "latest",
     "sass-loader": "latest",
     "source-map-loader": "latest",
+    "style-loader": "latest",
     "ts-loader": "latest",
     "typescript": "latest",
     "url-loader": "latest",
