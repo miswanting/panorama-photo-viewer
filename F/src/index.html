@@ -5,12 +5,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>全景浏览器</title>
+    <script src="https://cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.bootcss.com/react/16.10.2/umd/react.development.js"></script>
+    <script src="https://cdn.bootcss.com/react-dom/16.10.2/umd/react-dom.development.js"></script>
+    <script src="https://cdn.bootcss.com/three.js/r83/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bulma/0.7.5/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.11.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.11.2/css/solid.min.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            overflow-y: hidden;
+        }
+
+        #particals {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 
 <body class="has-navbar-fix-top">
-    <div id="root"></div>
+    <div id="root" style="height: 100%;"></div>
     <script src="index.js"></script>
+    <script>
+        particlesJS("particals", {
+            "particles": {
+                "density": {
+                    "enable": true,
+                    "value_area": 50
+                },
+                "opacity": {
+                    "value": 0.5,
+                },
+                "size": {
+                    "value": 4,
+                },
+                "line_linked": {
+                },
+                "move": {
+                    "enable": true,
+                    "direction": "right",
+                }
+            }
+        })
+    </script>
 </body>
 
 </html>

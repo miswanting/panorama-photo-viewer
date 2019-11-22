@@ -12,8 +12,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/socket.io-client": "latest",
     "bulma": "latest",
     "copy-webpack-plugin": "latest",
     "css-loader": "latest",
@@ -25,6 +27,7 @@
     "socket.io-client": "latest",
     "source-map-loader": "latest",
     "style-loader": "latest",
+    "three": "latest",
     "ts-loader": "latest",
     "typescript": "latest",
     "url-loader": "latest",

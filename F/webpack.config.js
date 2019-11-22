@@ -23,6 +23,7 @@ module.exports = {
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
             { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+            { test: /\.(ttf|otf|eot|svg|woff(2)?)$/, use: 'url-loader' },
         ]
     },
     plugins: [
@@ -30,5 +31,10 @@ module.exports = {
             'src/index.html',
             'res/*.jpg'
         ])
-    ]
+    ],
+    externals: {
+        "react": "React",
+        "react-dom": "ReactDOM",
+        "three": "THREE"
+    }
 };
