@@ -12,11 +12,11 @@ export default function Viewer(props: any) {
     // 按钮：返回，列表，音乐开关，自动旋转开关，陀螺仪开关，VR模式，小地图开关，场景信息，点赞，评论
     function clickBack() {
         console.log(props)
-        props.hook({ page: 'console' })
+        props.data.setData({ page: 'console' })
     }
     return (
         <>
-            <Panorama data={{}} />
+            <Panorama data={props.data} />
             <div id="info" style={{
                 position: 'absolute',
                 top: 10,
@@ -44,49 +44,56 @@ export default function Viewer(props: any) {
                             <div className="control">
                                 <button className="button is-primary is-small is-rounded">
                                     <span className="icon is-small">
-                                        <i className="fas fa-music"></i>
+                                        <i className="fas fa-music fa-stack-1x"></i>
+                                        <i className="fa fa-slash fa-stack-1x"></i>
                                     </span>
                                 </button>
                             </div>
                             <div className="control">
                                 <button className="button is-primary is-small is-rounded">
                                     <span className="icon is-small">
-                                        <i className="fas fa-map"></i>
+                                        <i className="fas fa-map fa-stack-1x"></i>
+                                        <i className="fa fa-slash fa-stack-1x"></i>
                                     </span>
                                 </button>
                             </div>
                             <div className="control">
                                 <button className="button is-primary is-small is-rounded">
                                     <span className="icon is-small">
-                                        <i className="fas fa-vr-cardboard"></i>
+                                        <i className="fas fa-vr-cardboard fa-stack-1x"></i>
+                                        <i className="fa fa-slash fa-stack-1x"></i>
                                     </span>
                                 </button>
                             </div>
                             <div className="control">
                                 <button className="button is-primary is-small is-rounded">
                                     <span className="icon is-small">
-                                        <i className="fas fa-sync"></i>
+                                        <i className="fas fa-sync fa-stack-1x fa-spin"></i>
+                                        {/* <i className="fa fa-slash fa-stack-1x"></i> */}
                                     </span>
                                 </button>
                             </div>
                             <div className="control">
                                 <button className="button is-primary is-small is-rounded">
                                     <span className="icon is-small">
-                                        <i className="fas fa-compass"></i>
+                                        <i className="fas fa-compass fa-stack-1x"></i>
+                                        <i className="fa fa-slash fa-stack-1x"></i>
                                     </span>
                                 </button>
                             </div>
                             <div className="control">
                                 <button className="button is-primary is-small is-rounded">
                                     <span className="icon is-small">
-                                        <i className="fas fa-backward"></i>
+                                        <i className="fas fa-backward fa-stack-1x"></i>
+                                        <i className="fa fa-slash fa-stack-1x"></i>
                                     </span>
                                 </button>
                             </div>
                             <div className="control">
                                 <button className="button is-primary is-small is-rounded">
                                     <span className="icon is-small">
-                                        <i className="fas fa-forward"></i>
+                                        <i className="fas fa-forward fa-stack-1x"></i>
+                                        <i className="fa fa-slash fa-stack-1x"></i>
                                     </span>
                                 </button>
                             </div>
@@ -125,45 +132,112 @@ export default function Viewer(props: any) {
     )
 }
 export function Panorama(props: any) {
-    // 用户交互中
-    const [isInteracting, setIsInteracting] = useState(false)
-    let camera: any, scene: any, renderer: any
-    function init() {
-        function initEnv() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100)
-            renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('pano').appendChild(renderer.domElement);
-        }
-        function initCamera() {
-            var geometry = new THREE.BoxGeometry(1, 1, 1);
-            var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-            var cube = new THREE.Mesh(geometry, material);
-            scene.add(cube);
+    let scene: any, camera: any, renderer: any
+    let isUserInteracting = false, // 用户是否正在交互
+        mouseX = 0, mouseY = 0,
+        lon = 0, mouseLon = 0,// 纬度
+        lat = 0, mouseLat = 0,// 经度
+        phi = 0, theta = 0;
 
-            camera.position.z = 5;
-        }
+    function init() {
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
+        function onPointerStart(e: any) {
+            isUserInteracting = true;//用户开始交互
+            // 一般化输入坐标
+            let clientX = e.clientX || e.touches[0].clientX;
+            let clientY = e.clientY || e.touches[0].clientY;
+            // 鼠标更新位置
+            mouseX = clientX;
+            mouseY = clientY;
+            mouseLon = lon;
+            mouseLat = lat;
+        }
+        function onPointerMove(e: any) {
+            if (isUserInteracting === true) {
+                // 一般化输入坐标
+                var clientX = e.clientX || e.touches[0].clientX;
+                var clientY = e.clientY || e.touches[0].clientY;
+                lon = (mouseX - clientX) * 0.1 + mouseLon;
+                lat = (clientY - mouseY) * 0.1 + mouseLat;
+            }
+        }
+        function onPointerEnd() {
+            isUserInteracting = false;
+        }
+        function onPointerWheel(e: any) {
+            var fov = camera.fov + e.deltaY * 0.05;
+            camera.fov = THREE.Math.clamp(fov, 10, 75);
+            camera.updateProjectionMatrix();
+        }
         function registerListeners() {
             window.addEventListener('resize', onWindowResize, false);
+            // 鼠标事件
+            window.addEventListener('mousedown', onPointerStart, false);
+            window.addEventListener('mousemove', onPointerMove, false);
+            window.addEventListener('mouseup', onPointerEnd, false);
+            window.addEventListener('wheel', onPointerWheel, false);
+            // 触摸事件
+            window.addEventListener('touchstart', onPointerStart, false);
+            window.addEventListener('touchmove', onPointerMove, false);
+            window.addEventListener('touchend', onPointerEnd, false);
+            // 拖拽事件
+            window.addEventListener('dragover', function (event) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'copy';
+            }, false);
+            window.addEventListener('dragenter', function () {
+                document.body.style.opacity = '0.5';
+            }, false);
+            window.addEventListener('dragleave', function () {
+                document.body.style.opacity = '1';
+            }, false);
+            window.addEventListener('drop', function (event) {
+                event.preventDefault();
+                var reader = new FileReader();
+                reader.addEventListener('load', function (event) {
+                    material.map.image.src = event.target.result;
+                    material.map.needsUpdate = true;
+                }, false);
+                reader.readAsDataURL(event.dataTransfer.files[0]);
+                document.body.style.opacity = '1';
+            }, false);
         }
         function animate() {
             requestAnimationFrame(animate);
             update()
         }
         function update() {
+            if (isUserInteracting === false) {
+                lon += 0.1;
+            }
+            lat = Math.max(- 85, Math.min(85, lat));
+            phi = THREE.Math.degToRad(90 - lat);
+            theta = THREE.Math.degToRad(lon);
+            camera.target.x = 500 * Math.sin(phi) * Math.cos(theta);
+            camera.target.y = 500 * Math.cos(phi);
+            camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
+            camera.lookAt(camera.target);
             renderer.render(scene, camera)
         }
-        initEnv()
-        initCamera()
-        // initScene()
-        // initLight()
-        // initObject()
+        ///////////////////////
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+        camera.target = new THREE.Vector3(0, 0, 0);
+        var geometry = new THREE.SphereBufferGeometry(500, 60, 40);
+        // X轴设为负数，面朝里
+        geometry.scale(- 1, 1, 1);
+        var texture = new THREE.TextureLoader().load(props.data.currentPath);
+        var material = new THREE.MeshBasicMaterial({ map: texture });
+        let mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('pano').appendChild(renderer.domElement);
         registerListeners()
         animate()
     }
@@ -174,102 +248,3 @@ export function Panorama(props: any) {
         <div id="pano" />
     )
 }
-// export class Panorama {
-//     camera: any
-//     scene: any
-//     renderer: any
-//     isUserInteracting = false
-//     onMouseDownMouseX = 0
-//     onMouseDownMouseY = 0
-//     lon = 0
-//     onMouseDownLon = 0
-//     lat = 0
-//     onMouseDownLat = 0
-//     phi = 0
-//     theta = 0
-//     constructor() {
-//         this.init()
-//         this.animate()
-//     }
-//     init() {
-//         var container, mesh;
-//         container = document.getElementById('pano');
-//         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-//         this.camera.target = new THREE.Vector3(0, 0, 0);
-//         this.scene = new THREE.Scene();
-//         var geometry = new THREE.SphereBufferGeometry(500, 60, 40);
-//         // invert the geometry on the x-axis so that all of the faces point inward
-//         geometry.scale(- 1, 1, 1);
-//         var texture = new THREE.TextureLoader().load('../res/test.jpg');
-//         var material = new THREE.MeshBasicMaterial({ map: texture });
-//         mesh = new THREE.Mesh(geometry, material);
-//         this.scene.add(mesh);
-//         this.renderer = new THREE.WebGLRenderer();
-//         this.renderer.setPixelRatio(window.devicePixelRatio);
-//         this.renderer.setSize(window.innerWidth, window.innerHeight);
-//         container.appendChild(this.renderer.domElement);
-//         document.addEventListener('mousedown', this.onPointerStart, false);
-//         document.addEventListener('mousemove', this.onPointerMove, false);
-//         document.addEventListener('mouseup', this.onPointerUp, false);
-//         document.addEventListener('wheel', this.onDocumentMouseWheel, false);
-//         document.addEventListener('touchstart', this.onPointerStart, false);
-//         document.addEventListener('touchmove', this.onPointerMove, false);
-//         document.addEventListener('touchend', this.onPointerUp, false);
-//         //
-//         document.addEventListener('dragover', function (event) {
-//             event.preventDefault();
-//             event.dataTransfer.dropEffect = 'copy';
-//         }, false);
-//         document.addEventListener('dragenter', function () {
-//             document.body.style.opacity = '0.5';
-//         }, false);
-//         document.addEventListener('dragleave', function () {
-//             document.body.style.opacity = '1';
-//         }, false);
-//         document.addEventListener('drop', function (event) {
-//             event.preventDefault();
-//             var reader = new FileReader();
-//             reader.addEventListener('load', function (event) {
-//                 material.map.image.src = event.target.result;
-//                 material.map.needsUpdate = true;
-//             }, false);
-//             reader.readAsDataURL(event.dataTransfer.files[0]);
-//             document.body.style.opacity = '1';
-//         }, false);
-//         //
-//         window.addEventListener('resize', this.onWindowResize, false);
-//     }
-//     animate() {
-//         requestAnimationFrame(this.animate);
-//         this.update();
-//     }
-//     update() {
-
-//     }
-//     onPointerStart(event: any) {
-//         this.isUserInteracting = true;
-//         var clientX = event.clientX || event.touches[0].clientX;
-//         var clientY = event.clientY || event.touches[0].clientY;
-//         this.onMouseDownMouseX = clientX;
-//         this.onMouseDownMouseY = clientY;
-//         this.onMouseDownLon = this.lon;
-//         this.onMouseDownLat = this.lat;
-//     }
-//     onPointerMove(event: any) {
-//         if (this.isUserInteracting === true) {
-//             var clientX = event.clientX || event.touches[0].clientX;
-//             var clientY = event.clientY || event.touches[0].clientY;
-//             this.lon = (this.onMouseDownMouseX - clientX) * 0.1 + this.onMouseDownLon;
-//             this.lat = (clientY - this.onMouseDownMouseY) * 0.1 + this.onMouseDownLat;
-//         }
-//     }
-//     onPointerUp() {
-//         this.isUserInteracting = false;
-//     }
-//     onDocumentMouseWheel(event: any) {
-//         var fov = this.camera.fov + event.deltaY * 0.05;
-//         this.camera.fov = THREE.Math.clamp(fov, 10, 75);
-//         this.camera.updateProjectionMatrix();
-//     }
-
-// }

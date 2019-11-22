@@ -1,3 +1,5 @@
+import os
+
 import socketio
 from flask import Flask
 
@@ -16,14 +18,27 @@ def disconnect(sid):
 def pkg(sid, data):
     # handle the message
     if data['cmd'] == 'get':
-        new_data = '123'
-        sio.emit('pkg', new_data)
+        new_pkg = {
+            'cmd': 'res_list',
+            'data': []
+        }
+        for root, dirs, files in os.walk('../res/'):
+            for each in files:
+                new_item = {
+                    'name': each,
+                    'des': '',
+                    'vipath': '',
+                    'path': root+each
+                }
+                new_pkg['data'].append(new_item)
+        sio.emit('pkg', new_pkg)
     return "OK", sid, data
 
 
 static_files = {
     '/': '../F/dist/index.html',
-    '/index.js': '../F/dist/index.js'
+    '/index.js': '../F/dist/index.js',
+    '/res/test.jpg': '../res/test.jpg'
 }
 
 if __name__ == '__main__':
@@ -32,4 +47,4 @@ if __name__ == '__main__':
         sio,
         app.wsgi_app,
         static_files=static_files)
-    app.run(threaded=True)
+    app.run(host='0.0.0.0', threaded=True)

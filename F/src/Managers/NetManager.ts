@@ -2,22 +2,27 @@
 import io = require('socket.io-client')
 export default class NetManager {
     socket: any
+    recv_func: any
     constructor() {
         this.socket = io()
         this.socket.on('connect', (s: any) => {
-            console.log('Connected', this)
+            console.log('Connected!')
             this.socket.on('disconnect', function () {
-                console.log('disconnected')
+                console.log('Disconnected!')
             })
         })
-        this.socket.on('message', (data: string) => {
-            console.log('msg:', data)
-        })
+        this.socket.on('message', (data: string) => { })
         this.socket.on('pkg', (data: any) => {
-            console.log('pkg:', data)
+            this.recv_func(data)
         })
     }
-    send(data: any) {
+    registerRecvFunc(recv_func: any) {
+        this.recv_func = recv_func
+    }
+    start() {
+
+    }
+    send = (data: any) => {
         this.socket.emit('pkg', data)
     }
 }
