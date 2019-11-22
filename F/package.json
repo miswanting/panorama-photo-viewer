@@ -6,13 +6,15 @@
   "scripts": {
     "初始化": "npm i",
     "打包": "npx webpack",
-    "运行": "node dist/server.js"
+    "运行": "node dist/server.js",
+    "修复NPM": "npm cache clean --force"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "bulma": "latest",
     "copy-webpack-plugin": "latest",
     "css-loader": "latest",
     "normalize.css": "latest",
@@ -20,6 +22,7 @@
     "react-dom": "latest",
     "sass": "latest",
     "sass-loader": "latest",
+    "socket.io-client": "latest",
     "source-map-loader": "latest",
     "style-loader": "latest",
     "ts-loader": "latest",
