@@ -88,12 +88,69 @@ export function Main(props: any) {
                 <div className="hero-body">
                     <div className="container has-text-centered">
                         <h1 className="title">
-                            全景浏览器
+                            药友制药
+                            <br/>
+                            工程研究中心
                         </h1>
+                        <h3 className="subtitle">
+                            全景浏览器
+                        </h3>
                         <br />
                         <button className="button is-primary is-inverted">
                             上传全景
                         </button>
+                        <div className="modal">
+                            <div className="modal-background"></div>
+                            <div className="modal-card">
+                                <header className="modal-card-head">
+                                    <div className="modal-card-title">
+                                        上传全景
+                                    </div>
+                                    <button className="delete"></button>
+                                </header>
+                                <section className="modal-card-body">
+                                    <div className="file has-name is-fullwidth">
+                                        <label className="file-label">
+                                            <input className="file-input" type="file" name="resume" />
+                                            <span className="file-cta">
+                                                <span className="file-icon">
+                                                    <i className="fas fa-upload"></i>
+                                                </span>
+                                                <span className="file-label">
+                                                    选择文件
+                                                </span>
+                                            </span>
+                                            <span className="file-name">
+                                                测试文件.jpg
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <div className="field">
+                                        <label className="label">名称</label>
+                                        <div className="control">
+                                            <input className="input" type="text" placeholder="名称" />
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div className="field">
+                                        <label className="label">描述</label>
+                                        <div className="control">
+                                            <textarea className="textarea" placeholder="描述"></textarea>
+                                        </div>
+                                    </div>
+                                    <br />
+                                </section>
+                                <footer className="modal-card-foot">
+                                    <button className="button is-success">
+                                        确定
+                                    </button>
+                                    <button className="button">
+                                        取消
+                                    </button>
+                                </footer>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

@@ -5,14 +5,30 @@ import THREE = require('three');
 
 
 export default function Viewer(props: any) {
+    let [isPlayingMusic, setIsPlayingMusic] = useState(false)
+    let [isShowingMenu, setIsShowingMenu] = useState(false)
+    let [isShowingMap, setIsShowingMap] = useState(false)
+    let [isVRMode, setIsVRMode] = useState(false)
+    let [isAutoRotate, setIsAutoRotate] = useState(true)
+    let [isUserRotate, setIsUserRotate] = useState(false)
+    let [isAbleNext, setIsAbleNext] = useState(false)
+    let [isAblePrev, setIsAblePrev] = useState(false)
+    let data: any = {
+        isAutoRotate: isAutoRotate
+    }
+    for (let key in data) {
+        props.data[key] = data[key]
+    }
     // 图层：
     // 全景：图像，介绍信息，转场按钮
     // 全景-标记（路径）
     // 视窗：按钮，小地图，转场
     // 按钮：返回，列表，音乐开关，自动旋转开关，陀螺仪开关，VR模式，小地图开关，场景信息，点赞，评论
     function clickBack() {
-        console.log(props)
         props.data.setData({ page: 'console' })
+    }
+    function clickAutoRotate() {
+        setIsAutoRotate(!isAutoRotate)
     }
     return (
         <>
@@ -66,10 +82,18 @@ export default function Viewer(props: any) {
                                 </button>
                             </div>
                             <div className="control">
-                                <button className="button is-primary is-small is-rounded">
+                                <button className="button is-primary is-small is-rounded" onClick={clickAutoRotate}>
                                     <span className="icon is-small">
-                                        <i className="fas fa-sync fa-stack-1x fa-spin"></i>
-                                        {/* <i className="fa fa-slash fa-stack-1x"></i> */}
+                                        {isAutoRotate ?
+                                            (
+                                                <i className="fas fa-sync fa-spin"></i>
+                                            ) : (
+                                                <>
+                                                    <i className="fas fa-sync fa-stack-1x"></i>
+                                                    <i className="fa fa-slash fa-stack-1x"></i>
+                                                </>
+                                            )
+                                        }
                                     </span>
                                 </button>
                             </div>
@@ -132,9 +156,11 @@ export default function Viewer(props: any) {
     )
 }
 export function Panorama(props: any) {
+    // let [isInteracting, setIsInteracting] = useState(false)
+    console.log(props)
     let scene: any, camera: any, renderer: any
-    let isUserInteracting = false, // 用户是否正在交互
-        mouseX = 0, mouseY = 0,
+    let isInteracting = false// 用户是否正在交互
+    let mouseX = 0, mouseY = 0,
         lon = 0, mouseLon = 0,// 纬度
         lat = 0, mouseLat = 0,// 经度
         phi = 0, theta = 0;
@@ -146,7 +172,7 @@ export function Panorama(props: any) {
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
         function onPointerStart(e: any) {
-            isUserInteracting = true;//用户开始交互
+            isInteracting = true;//用户开始交互
             // 一般化输入坐标
             let clientX = e.clientX || e.touches[0].clientX;
             let clientY = e.clientY || e.touches[0].clientY;
@@ -157,7 +183,7 @@ export function Panorama(props: any) {
             mouseLat = lat;
         }
         function onPointerMove(e: any) {
-            if (isUserInteracting === true) {
+            if (isInteracting === true) {
                 // 一般化输入坐标
                 var clientX = e.clientX || e.touches[0].clientX;
                 var clientY = e.clientY || e.touches[0].clientY;
@@ -166,13 +192,15 @@ export function Panorama(props: any) {
             }
         }
         function onPointerEnd() {
-            isUserInteracting = false;
+            isInteracting = false;
         }
         function onPointerWheel(e: any) {
             var fov = camera.fov + e.deltaY * 0.05;
             camera.fov = THREE.Math.clamp(fov, 10, 75);
             camera.updateProjectionMatrix();
         }
+        function onDeviceMove() { }
+        function onDeviceRotate() { }
         function registerListeners() {
             window.addEventListener('resize', onWindowResize, false);
             // 鼠标事件
@@ -184,6 +212,10 @@ export function Panorama(props: any) {
             window.addEventListener('touchstart', onPointerStart, false);
             window.addEventListener('touchmove', onPointerMove, false);
             window.addEventListener('touchend', onPointerEnd, false);
+            // 陀螺仪事件
+            window.addEventListener('deviceorientation', onDeviceRotate, false);
+            // 加速度事件
+            window.addEventListener('devicemotion', onDeviceMove, false);
             // 拖拽事件
             window.addEventListener('dragover', function (event) {
                 event.preventDefault();
@@ -211,7 +243,7 @@ export function Panorama(props: any) {
             update()
         }
         function update() {
-            if (isUserInteracting === false) {
+            if (isInteracting === false && props.data.isAutoRotate) {
                 lon += 0.1;
             }
             lat = Math.max(- 85, Math.min(85, lat));
@@ -243,7 +275,7 @@ export function Panorama(props: any) {
     }
     useEffect(() => {
         init()
-    })
+    },[props.data.path])
     return (
         <div id="pano" />
     )
